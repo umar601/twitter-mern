@@ -1,0 +1,43 @@
+<%- include("includes/header.ejs") %>
+<body>
+    
+    <% for (post of posts) {%>
+        <div>
+            <h2>name <%= post.name %></h2>
+            <p>post  <%= post.post %></p></p>
+            <p>likes <%= post.likes %></p></p>
+            <p>shares <%= post.shares %></p></p>
+            <p>reposts <%= post.shares %></p></p>
+            <a href="/?id=<%= post.id %>">comment</a>
+            <% if(post.id==id) {%>
+                <a href="/">X</a>
+                <% for( comm of post.Comment){ %>
+
+                    <p><%= comm %></p>
+
+                <% } %>
+
+                <form action="/post/comment/<%= post.id %>" method="post">
+                    <input type="text" placeholder="comment...." name="comment">
+                    <button>post</button>
+                </form>
+            
+            <% } %>
+
+            <a href="/post/<%= post.id %>">update</a>
+            <a href="/post/view/<%= post.id %>">view</a>
+            <form action="/post/delete/<%= post.id %>?_method=delete" method="post">
+                <button>delete</button>
+            </form>
+            
+        </div>
+    <% } %>
+
+    <form action="/post" method="post">
+        <input type="text" placeholder="enter the post..." name="post" id="">
+        <button>submit</button>
+    </form>
+    
+</body>
+<script src="script.js"></script>
+</html>

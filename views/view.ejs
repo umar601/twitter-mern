@@ -1,0 +1,30 @@
+<%- include("includes/header.ejs") %>
+<body>
+
+    <h1>post</h1>
+    
+        <div>
+            <h2>name <%= post.name %></h2>
+            <p>post  <%= post.post %></p></p>
+            <p>likes <%= post.likes %></p></p>
+            <p>shares <%= post.shares %></p></p>
+            <p>reposts <%= post.shares %></p></p>
+            <a href="/?id=<%= post.id %>">comment</a>
+    
+                <% for( comm of post.Comment){ %>
+
+                    <p><%= comm %></p>
+
+                <% } %>
+
+        
+
+            <a href="/">home</a>
+            
+        </div>
+
+   
+    
+</body>
+
+</html>
