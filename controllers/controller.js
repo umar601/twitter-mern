@@ -1,5 +1,7 @@
 const {v4:uuid} = require("uuid");
 
+const {user} = require("../models/model.js")
+
 
 let posts=[
     {id:uuid(),name:"umar",post:"i love allah",Comment:["good","best"],likes:10,shares:10,reposts:10},
@@ -21,7 +23,13 @@ function addpost(req,res){
 
     let {post} = req.body;
 
-    posts.push({id:uuid(),name:"umar",post:post,Comment:[],likes:0,shares:0,reposts:0})
+    // posts.push({id:uuid(),name:"umar",post:post,Comment:[],likes:0,shares:0,reposts:0})
+
+    user.insertOne({name:"umar",post:post,comment:[],likes:0,shares:0,reposts:0}).then(()=>{
+        console.log("saved")
+    }).catch(()=>{
+        console.log("err")
+    })
 
     res.redirect("/")
 }
