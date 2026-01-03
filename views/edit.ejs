@@ -1,7 +1,7 @@
 <%- include("includes/header.ejs") %>
 <body>
     
-    <form action="/post/edit/<%= post.id %>?_method=patch" method="post">
+    <form action="/post/edit/<%= post._id %>?_method=patch" method="post">
     <textarea name="pos" id=""><%= post.post %></textarea>
     <button>submit</button>
     </form>

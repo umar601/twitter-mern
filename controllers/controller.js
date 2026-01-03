@@ -3,17 +3,21 @@ const {v4:uuid} = require("uuid");
 const {user} = require("../models/model.js")
 
 
-let posts=[
-    {id:uuid(),name:"umar",post:"i love allah",Comment:["good","best"],likes:10,shares:10,reposts:10},
-    {id:uuid(),name:"umar",post:"i love allah",Comment:["good","best"],likes:10,shares:10,reposts:10},
-    {id:uuid(),name:"umar",post:"i love allah",Comment:["good","best"],likes:10,shares:10,reposts:10},
-    {id:uuid(),name:"umar",post:"i love allah",Comment:["good","best"],likes:10,shares:10,reposts:10},
-    {id:uuid(),name:"umar",post:"i love allah",Comment:["good","best"],likes:10,shares:10,reposts:10},
-]
+// let posts=[
+//     {id:uuid(),name:"umar",post:"i love allah",Comment:["good","best"],likes:10,shares:10,reposts:10},
+//     {id:uuid(),name:"umar",post:"i love allah",Comment:["good","best"],likes:10,shares:10,reposts:10},
+//     {id:uuid(),name:"umar",post:"i love allah",Comment:["good","best"],likes:10,shares:10,reposts:10},
+//     {id:uuid(),name:"umar",post:"i love allah",Comment:["good","best"],likes:10,shares:10,reposts:10},
+//     {id:uuid(),name:"umar",post:"i love allah",Comment:["good","best"],likes:10,shares:10,reposts:10},
+// ]
 
-function homepage(req,res){
+async function homepage(req,res){
 
     let {id}=req.query
+
+    let posts= await user.find({})
+
+
 
     res.render("index.ejs",{posts,id});
 
@@ -25,8 +29,9 @@ function addpost(req,res){
 
     // posts.push({id:uuid(),name:"umar",post:post,Comment:[],likes:0,shares:0,reposts:0})
 
-    user.insertOne({name:"umar",post:post,comment:[],likes:0,shares:0,reposts:0}).then(()=>{
-        console.log("saved")
+    user.insertOne({name:"umar",post:post,comment:[],likes:0,shares:0,reposts:0})
+    .then((data)=>{
+        console.log(data)
     }).catch(()=>{
         console.log("err")
     })
@@ -34,39 +39,42 @@ function addpost(req,res){
     res.redirect("/")
 }
 
-function addcomment(req,res){
+async function addcomment(req,res){
 
     let {comment} = req.body;
     let {id} = req.params;
 
-    for( post of posts){
+    console.log(id);
 
-        if(post.id==id){
-
-            post.Comment.push(comment)
-            break;
-        }
-    }
+    await user.findByIdAndUpdate(id,{$push:{comment:comment}},{new:true})
+    .then((data)=>{
+        console.log(data)
+    })
+    .catch(()=>{
+        console.log("err")
+    })
 
 
     res.redirect(`/?id=${id}`)
 }
 
 
-function update(req,res){
+async function update(req,res){
 
     let {id} = req.params;
-    let post;
 
-    for( post of posts){
 
-        if(post.id==id){
+    let post = await user.findById(id)
 
-            post={...post}
+    // for( post of posts){
 
-            break;
-        }
-    }
+    //     if(post.id==id){
+
+    //         post={...post}
+
+    //         break;
+    //     }
+    // }
 
     
 
@@ -74,22 +82,25 @@ function update(req,res){
 }
 
 
-function updatepost(req,res){
+async function updatepost(req,res){
 
     let {pos} = req.body;
     let {id} = req.params;
 
    // console.log(pos)
 
-    for( post of posts ){
+   await user.findByIdAndUpdate(id,{post:pos})
 
-        if(post.id==id){
 
-        post.post=pos;
-        break;
+    // for( post of posts ){
 
-        }
-    }
+    //     if(post.id==id){
+
+    //     post.post=pos;
+    //     break;
+
+    //     }
+    // }
 
 
     res.redirect("/")
@@ -98,24 +109,27 @@ function updatepost(req,res){
 }
 
 
-function viewpost(req,res){
+async function viewpost(req,res){
 
 
       let {id} = req.params;
 
-      let post
+
+
+    let post = await user.findById(id)
+
 
    // console.log(pos)
 
-    for( post of posts ){
+    // for( post of posts ){
 
-        if(post.id==id){
+    //     if(post.id==id){
 
-        post={...post}
-        break;
+    //     post={...post}
+    //     break;
 
-        }
-    }
+    //     }
+    // }
 
     res.render("view.ejs",{post})
 
@@ -123,7 +137,7 @@ function viewpost(req,res){
 }
 
 
-function deletepost (req,res){
+async function deletepost (req,res){
 
 
      let {id} = req.params;
@@ -131,15 +145,18 @@ function deletepost (req,res){
     //  console.log(id)
 
 
-    for(let i=0;i<posts.length;i++){
+    await user.findByIdAndDelete(id);
 
-        if(posts[i].id==id){
 
-            posts.splice(i,1)
-        break;
+    // for(let i=0;i<posts.length;i++){
 
-        }
-    }
+    //     if(posts[i].id==id){
+
+    //         posts.splice(i,1)
+    //     break;
+
+    //     }
+    // }
 
     res.redirect("/")
 
